@@ -33,11 +33,6 @@ public class Jogador {
 	}
 
 	public void update() {
-		System.out.println("update");
-		System.out.println("x era " + x ); 
-		System.out.println("y era " + y );
-		System.out.println("dx é " + dx);
-		System.out.println("dy é " + dy);
 		x += dx;
 		y += dy;
 		dy = 0;
@@ -58,28 +53,28 @@ public class Jogador {
 		
 		int codigo = tecla.getKeyCode();
 		
-		if (codigo == KeyEvent.VK_A) {
+		if (codigo == KeyEvent.VK_Z) {
 			tiroSimples();
 		}
 		
-		if (codigo == KeyEvent.VK_NUMPAD8) {
+		if (codigo == KeyEvent.VK_W) {
 			dy = -speed;
 			System.out.println("^"); 
 		}
 		
-		if (codigo == KeyEvent.VK_NUMPAD2) {
+		if (codigo == KeyEvent.VK_S) {
 			dy = speed;
 			System.out.println("_");
 		}
 
 		
-		if (codigo == KeyEvent.VK_NUMPAD4) {
+		if (codigo == KeyEvent.VK_A) {
 			dx = -speed;
 			System.out.println("<");
 		}
 
 		
-		if (codigo == KeyEvent.VK_NUMPAD6) {
+		if (codigo == KeyEvent.VK_D) {
 			dx = speed;
 			System.out.println(">");
 		}
