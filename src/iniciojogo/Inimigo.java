@@ -7,32 +7,49 @@ import java.awt.Rectangle;
 
 import javax.swing.ImageIcon;
 
-public class Inimigo1 {
+public class Inimigo {
 	
 	private Image imagem;
 	private int x, y;
 	private int largura, altura;
 	private boolean isVisivel;
 	
-	private static final int LARGURA = 938;
-	private static int VELOCIDADE = 2;
+	private static final int LARGURA = 1200;
+	private static int VELOCIDADE = 1;
+
+	private static int contador = 0;
 	
-	public Inimigo1 (int x, int y) {
-		this.x = x;
-		this.y = y;
-		isVisivel = true;
-	}
-	
-	public void load() {
-		ImageIcon referencia = new ImageIcon("res\\Inimigo2.png");
-		imagem = referencia.getImage();
-		
-		this.largura = imagem.getWidth(null);
-		this.altura = imagem.getHeight(null);
-	}
-	
+	public Inimigo(int x, int y) {
+
+        this.x = x;
+        this.y = y;
+
+        ImageIcon referencia;
+
+        if (contador++ % 3 == 0) {
+
+            referencia = new ImageIcon("res/inimigo2.png");
+
+        } else {
+
+            referencia = new ImageIcon("res/inimigo1.png");
+        }
+
+        imagem = referencia.getImage();
+
+        this.largura = imagem.getWidth(null);
+        this.altura = imagem.getHeight(null);
+
+        isVisivel = true;
+
+    }
+
 	public void update() {
-		this.x -= VELOCIDADE;
+		if (this.x < 0) {
+            this.x = LARGURA;
+        } else {
+            this.x -= VELOCIDADE;
+        }
 		
 	}
 
@@ -67,10 +84,5 @@ public class Inimigo1 {
 	public Image getImagem() {
 		return imagem;
 	}
-
-	public static void add(Inimigo1 inimigo1) {		
-		
-	}
-
 	
 }

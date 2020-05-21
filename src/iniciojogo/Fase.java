@@ -8,20 +8,25 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.Color;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import javax.swing.Timer;
-import iniciojogo.Inimigo1;
 
 public class Fase<jogador> extends JPanel implements ActionListener {
+	/**
+	 *
+	 */
+	private static final long serialVersionUID = 1L;
+
 	private Image fundo;
-	private Image nebulosa;
 	private Jogador jogador;
 	private Timer timer;
-	private List<Inimigo1> inimigo1;
+	private List<Inimigo> inimigo;
 	private List<Estrelas> estrelas;
 
 	private boolean emJogo;
@@ -29,32 +34,30 @@ public class Fase<jogador> extends JPanel implements ActionListener {
 	public Fase() {
 		setFocusable(true);
 		setDoubleBuffered(true);
-
-		ImageIcon referencia = new ImageIcon("res\\fundo01.png");
-		fundo = referencia.getImage();
-
-		jogador = (new Jogador());
-		jogador.load();
-
 		addKeyListener(new TecladoAdapter());
+
+		ImageIcon referencia = new ImageIcon("res/fundo01.png");
+		fundo = referencia.getImage();
+		jogador = new Jogador();
+
+		emJogo = true;
+		inicializaInimigos();
+		inicializaEstrelas();
 
 		timer = new Timer(5, this);
 		timer.start();
 
-		inicializaInimigos();
-		inicializaEstrelas();
-		emJogo = true;
-
 	}
 
 	public void inicializaInimigos() {
-		int coordenadas[] = new int[40];
-		inimigo1 = new ArrayList<Inimigo1>();
+		int coordenadas[] = new int[50];
+		inimigo = new ArrayList<Inimigo>();
 
 		for (int i = 0; i < coordenadas.length; i++) {
 			int x = (int) (Math.random() * 8000 + 1024);
-			int y = (int) (Math.random() * 650 + 30);
-			inimigo1.add(new Inimigo1(x, y));
+			int y = (int) (Math.random() * 620 + 30);
+			
+			inimigo.add(new Inimigo(x, y));
 
 		}
 	}
@@ -65,46 +68,49 @@ public class Fase<jogador> extends JPanel implements ActionListener {
 
 		for (int i = 0; i < coordenadas.length; i++) {
 			int x = (int) (Math.random() * 1024 + 0);
-			int y = (int) (Math.random() * 768 + 0);
+			int y = (int) (Math.random() * 728 + 0);
 			estrelas.add(new Estrelas(x, y));
 		}
 	}
 
 	public void paint(Graphics g) {
-		Graphics2D graficos = (Graphics2D) g;
-		if (emJogo == true) {
 
-			graficos.drawImage(fundo, 0, 0, null);
-			for (int p = 0; p < estrelas.size(); p++) {
-				Estrelas q = estrelas.get(p);
-				q.load();
-				graficos.drawImage(q.getImagem(), q.getX(), q.getY(), this);
-			}
-			
+		Graphics2D graficos = (Graphics2D) g;
+		graficos.drawImage(fundo, 0, 0, null);
+		
+
+		if (emJogo) {
+
 			graficos.drawImage(jogador.getImagem(), jogador.getX(), jogador.getY(), this);
 			List<Tiro> tiros = jogador.getTiros();
+
+			for (int p = 0; p < estrelas.size(); p++) {
+				Estrelas q = estrelas.get(p);
+				graficos.drawImage(q.getImagem(), q.getX(), q.getY(), this);
+			}
+
 			for (int i = 0; i < tiros.size(); i++) {
 				Tiro m = tiros.get(i);
-				m.load();
 				graficos.drawImage(m.getImagem(), m.getX(), m.getY(), this);
 			}
 
-			for (int o = 0; o < inimigo1.size(); o++) {
-				Inimigo1 in = inimigo1.get(o);
-				in.load();
+			for (int o = 0; o < inimigo.size(); o++) {
+				Inimigo in = (Inimigo) inimigo.get(o);
+				// in.load();
 				graficos.drawImage(in.getImagem(), in.getX(), in.getY(), this);
 			}
-		}
 
-		else {
-			ImageIcon fimJogo = new ImageIcon("res\\fimdejogo1.png");
+			graficos.setColor(Color.WHITE);
+			graficos.drawString("INIMIGOS: " + inimigo.size(), 5, 15);
+
+		} else {
+			ImageIcon fimJogo = new ImageIcon("res/fimdejogo1.png");
 			graficos.drawImage(fimJogo.getImage(), 0, 0, null);
 
 		}
-		{
 
-			g.dispose();
-		}
+		g.dispose();
+
 	}
 
 	@Override
@@ -132,14 +138,15 @@ public class Fase<jogador> extends JPanel implements ActionListener {
 			}
 		}
 
-		for (int o = 0; o < inimigo1.size(); o++) {
-			Inimigo1 in = inimigo1.get(o);
+		for (int o = 0; o < inimigo.size(); o++) {
+			Inimigo in = inimigo.get(o);
 			if (in.isVisivel()) {
 				in.update();
 			} else {
-				inimigo1.remove(o);
+				inimigo.remove(o);
 
 			}
+
 			checarColisoes();
 			repaint();
 
@@ -148,15 +155,15 @@ public class Fase<jogador> extends JPanel implements ActionListener {
 
 	public void checarColisoes() {
 		Rectangle formaNave = jogador.getBounds();
-		Rectangle formaInimigo1;
+		Rectangle formainimigo;
 		Rectangle formatiro;
 
-		for (int i = 0; i < inimigo1.size(); i++) {
-			Inimigo1 tempInimigo1 = inimigo1.get(i);
-			formaInimigo1 = tempInimigo1.getBounds();
-			if (formaNave.intersects(formaInimigo1)) {
+		for (int i = 0; i < inimigo.size(); i++) {
+			Inimigo tempinimigo = inimigo.get(i);
+			formainimigo = tempinimigo.getBounds();
+			if (formaNave.intersects(formainimigo)) {
 				jogador.setVisivel(false);
-				tempInimigo1.setVisivel(false);
+				tempinimigo.setVisivel(false);
 				emJogo = false;
 
 			}
@@ -166,11 +173,11 @@ public class Fase<jogador> extends JPanel implements ActionListener {
 		for (int j = 0; j < tiros.size(); j++) {
 			Tiro tempTiro = tiros.get(j);
 			formatiro = tempTiro.getBounds();
-			for (int o = 0; o < inimigo1.size(); o++) {
-				Inimigo1 tempInimigo1 = inimigo1.get(o);
-				formaInimigo1 = tempInimigo1.getBounds();
-				if (formatiro.intersects(formaInimigo1)) {
-					tempInimigo1.setVisivel(false);
+			for (int o = 0; o < inimigo.size(); o++) {
+				Inimigo tempinimigo = inimigo.get(o);
+				formainimigo = tempinimigo.getBounds();
+				if (formatiro.intersects(formainimigo)) {
+					tempinimigo.setVisivel(false);
 					tempTiro.setVisivel(false);
 				}
 
@@ -179,24 +186,34 @@ public class Fase<jogador> extends JPanel implements ActionListener {
 		}
 	}
 
-	public List<Inimigo1> getInimigo1() {
-		return inimigo1;
+	public List<Inimigo> getinimigo() {
+		return inimigo;
 	}
 
-	public void setInimigo1(List<Inimigo1> inimigo1) {
-		this.inimigo1 = inimigo1;
+	public void setinimigo(List<Inimigo> inimigo) {
+		this.inimigo = inimigo;
 	}
 
 	private class TecladoAdapter extends KeyAdapter {
+
 		@Override
 		public void keyPressed(KeyEvent e) {
-			jogador.keyPressed(e);
 
+			if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+
+				emJogo = true;
+				jogador = new Jogador();
+				inicializaInimigos();
+				inicializaEstrelas();
+
+			}
+
+			jogador.keyPressed(e);
 		}
 
 		@Override
 		public void keyReleased(KeyEvent e) {
-			jogador.keyRelease(e);
+			jogador.keyReleased(e);
 		}
 
 	}

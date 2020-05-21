@@ -14,77 +14,51 @@ public class Jogador {
 	private int dx, dy;
 	private Image imagem;
 	private int altura, largura;
-	private List <Tiro> tiros;
+	private List<Tiro> tiros;
 	private boolean isVisivel;
 
 	public Jogador() {
-		this.x= 100;
-		this.y = 728/2;	
-		isVisivel= true;
+		this.x = 100;
+		this.y = 728 / 2;
+		//isVisivel = true;
 
 		tiros = new ArrayList<Tiro>();
-	}
-
-	public void load() {
-		ImageIcon referencia = new ImageIcon("res\\jogador05.png");
+		ImageIcon referencia = new ImageIcon("res/jogador04.png");
 		imagem = referencia.getImage();
 		altura = imagem.getHeight(null);
 		largura = imagem.getHeight(null);
 	}
 
+
 	public void update() {
+		//System.out.println(x+", "+y);
 		x += dx;
 		y += dy;
-		dy = 0;
-		dx = 0;
+
+		if (this.x < -1) {
+            x = -1;
+        }
+
+        if (this.x > 929) {
+            x = 929;
+        }
+
+        if (this.y < -1) {
+            y = -1;
+        }
+
+        if (this.y > 611) {
+            y = 611	;
+        }
 	}
 
 	public void tiroSimples() {
-		this.tiros.add(new Tiro(x + (largura/2), y + (altura/2)));
+		this.tiros.add(new Tiro(x + largura, y + altura / 3));
 	}
-	
+
 	public Rectangle getBounds() {
 		return new Rectangle(x, y, largura, altura);
 	}
-	
-
-	public void keyPressed(KeyEvent tecla) {
-		final int speed = 3;
-		
-		int codigo = tecla.getKeyCode();
-		
-		if (codigo == KeyEvent.VK_Z) {
-			tiroSimples();
-		}
-		
-		if (codigo == KeyEvent.VK_W) {
-			dy = -speed;
-			System.out.println("^"); 
-		}
-		
-		if (codigo == KeyEvent.VK_S) {
-			dy = speed;
-			System.out.println("_");
-		}
-
-		
-		if (codigo == KeyEvent.VK_A) {
-			dx = -speed;
-			System.out.println("<");
-		}
-
-		
-		if (codigo == KeyEvent.VK_D) {
-			dx = speed;
-			System.out.println(">");
-		}
-	}
-	public void keyRelease(KeyEvent tecla) {
-		dy = 0;
-		dx = 0;
-		
-	}
-
 
 	public boolean isVisivel() {
 		return isVisivel;
@@ -110,6 +84,57 @@ public class Jogador {
 		return tiros;
 	}
 
-	
+	public void keyPressed(KeyEvent tecla) {
+
+		int codigo = tecla.getKeyCode();
+
+		if (codigo == KeyEvent.VK_SPACE) {
+			tiroSimples();
+		}
+
+		if (codigo == KeyEvent.VK_UP) {
+			dy = -1;
+		}
+
+		if (codigo == KeyEvent.VK_DOWN) {
+			dy = 1;
+		}
+
+		if (codigo == KeyEvent.VK_LEFT) {
+			dx = -1;
+		}
+
+		if (codigo == KeyEvent.VK_RIGHT) {
+			dx = 1;
+		}
+	}
+
+	public void keyReleased(KeyEvent tecla) {
+
+		int codigo = tecla.getKeyCode();
+
+		if (codigo == KeyEvent.VK_UP) {
+
+			dy = 0;
+
+		}
+		if (codigo == KeyEvent.VK_DOWN) {
+
+			dy = 0;
+
+		}
+
+		if (codigo == KeyEvent.VK_LEFT) {
+
+			dx = 0;
+
+		}
+
+		if (codigo == KeyEvent.VK_RIGHT) {
+
+			dx = 0;
+
+		}
+	}
 
 }

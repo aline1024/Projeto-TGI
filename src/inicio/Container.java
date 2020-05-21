@@ -4,14 +4,20 @@ import javax.swing.JFrame;
 import iniciojogo.Fase;
 
 public class Container extends JFrame {
+	/**
+	 *
+	 */
+	private static final long serialVersionUID = 1L;
+
 	public Container() {
+		
 		add(new Fase());
 		setTitle("Meu TGI");
-		setSize(1024, 728);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setSize(1024, 728);
 		setLocationRelativeTo(null);
-		this.setResizable(false);
 		setVisible(true);
+		setResizable(false);	
 
 	}
 
