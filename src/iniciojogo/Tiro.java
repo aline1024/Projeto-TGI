@@ -14,22 +14,28 @@ public class Tiro {
 	private int largura, altura;
 	private boolean isVisivel;
 	
-	private static final int LARGURA = 938;
+	private static final int LARGURA = 1024;
 	private static int VELOCIDADE = 2;
 	
 	public Tiro (int x, int y) {
 		this.x = x;
 		this.y = y;
 		isVisivel = true;
-	}
-	
-	public void load() {
-		ImageIcon referencia = new ImageIcon("res\\tiroSimples.png");
+
+		ImageIcon referencia = new ImageIcon("res/tiroSimples.png");
 		imagem = referencia.getImage();
 		
 		this.largura = imagem.getWidth(null);
 		this.altura = imagem.getHeight(null);
 	}
+	
+	/*public void load() {
+		ImageIcon referencia = new ImageIcon("res/tiroSimples.png");
+		imagem = referencia.getImage();
+		
+		this.largura = imagem.getWidth(null);
+		this.altura = imagem.getHeight(null);
+	}*/
 	
 	public void update() {
 		this.x += VELOCIDADE;
